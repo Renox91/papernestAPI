@@ -25,15 +25,29 @@ def check_providers_availability(lon,lat,citycode):
     return filtered_antennas
 
 def get_coverage(address):
-    response = requests.get(API_URL, params={'q': address,"limit": 1})
-    citycode = response.json()['features'][0]['properties']['citycode']
+    response = requests.get(API_URL, params={'q': address})
+    data = response.json()
+    
+    # Extract the postcode from the address
+    import re
+    postcode_match = re.search(r'\b(\d{5})\b', address)
+    target_postcode = postcode_match.group(1) if postcode_match else None
+
+    for feature in data['features']:
+        if target_postcode and feature['properties']['postcode'] == target_postcode:
+            best_feature = feature
+            break
+    else:
+        # If no match, take the first result
+        print("No match, taking the first result")
+        best_feature = data['features'][0]
+    
+    citycode = best_feature['properties']['citycode']
+    coordinates = best_feature['geometry']['coordinates']
+    lon, lat = coordinates[0], coordinates[1]
     
     # Get filtered antennas
-    filtered_antennas = check_providers_availability(
-        lon=response.json()['features'][0]['geometry']['coordinates'][0], 
-        lat=response.json()['features'][0]['geometry']['coordinates'][1], 
-        citycode=citycode
-    )
+    filtered_antennas = check_providers_availability(lon, lat, citycode)
     
     # Create result with all operators
     result = {}
