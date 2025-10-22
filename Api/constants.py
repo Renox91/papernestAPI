@@ -21,3 +21,6 @@ TECHNOLOGIES = {
     '4G': '4G',
     '5G': '5G'
 }
+
+# Geographic filtering constants
+GEOGRAPHIC_PREFILTER_RANGE = 0.2

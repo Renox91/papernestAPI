@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .utils.geocode import get_coverage
+import requests
 
 @api_view(['GET'])
 def getCoverage(request):
@@ -32,7 +33,7 @@ def getCoverage(request):
         result = get_coverage(address)
         return Response(result)
     
-    except request.RequestException as e:
+    except requests.RequestException as e:
         return Response({'error': 'Geocoding service unavailable'}, status=503)
     
     except Exception as e:

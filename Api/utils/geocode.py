@@ -1,8 +1,6 @@
 import requests
-import pyproj
 from Api.constants import API_URL, CSV_NAME, REVERSE_URL, MOBILE_OPERATORS
 from .csv_utils import find_closest_antenna_per_operator
-import geopy.distance
 
 def get_city_code_from_coords(lon: float, lat: float, timeout=5.0):
     # reverse attend lat, lon (dans les params, pas dans l'ordre GeoJSON)

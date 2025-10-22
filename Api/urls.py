@@ -2,5 +2,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('coverage/', views.getCoverage),
+    path('coverage/', views.getCoverage, name='coverage'),
 ]

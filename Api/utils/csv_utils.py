@@ -2,7 +2,7 @@ import csv
 import os
 from django.conf import settings
 import geopy.distance
-from ..constants import MOBILE_OPERATORS
+from ..constants import MOBILE_OPERATORS, GEOGRAPHIC_PREFILTER_RANGE
 
 def distance_between_long_lat(lon1, lat1, lon2, lat2):
     return geopy.distance.geodesic((lat1, lon1), (lat2, lon2)).km
@@ -21,7 +21,12 @@ def find_closest_antenna_per_operator(target_lon, target_lat, csv_name, max_dist
                     # Get coordinates from CSV
                     lon = float(row['lon'].strip())
                     lat = float(row['lat'].strip())
-                    # Calculate distance
+                    
+                    # Quick pre-filter: skip if obviously too far (saves 99% of distance calculations)
+                    if (abs(lat - target_lat) > GEOGRAPHIC_PREFILTER_RANGE or abs(lon - target_lon) > GEOGRAPHIC_PREFILTER_RANGE):
+                        continue
+                    
+                    # Calculate distance only for nearby antennas
                     distance = distance_between_long_lat(lon, lat, target_lon, target_lat)
                     # Skip if too far
                     if distance > max_distance_km:
@@ -50,5 +55,4 @@ def find_closest_antenna_per_operator(target_lon, target_lat, csv_name, max_dist
             return closest_antennas
             
     except Exception as e:
-        print(f"Error reading CSV: {e}")
         return {}

@@ -7,6 +7,7 @@ API to check mobile network coverage (2G, 3G, 4G) for any French address using r
 - **Geocoding integration** with French government API (data.gouv.fr)
 - **Mobile operator coverage lookup** for Orange, SFR, Free, and Bouygues
 - **City code validation** to ensure accurate coverage data
+- **Optimized processing** with geographic pre-filtering for fast response times
 - **RESTful API** with JSON responses
 
 ## Installation
