@@ -55,7 +55,6 @@ curl "http://localhost:8000/coverage/?q=42+rue+papernest+75011+Paris"
 **Response Format:**
 - `true`: Technology available
 - `false`: Technology not available
-- `null`: No coverage in the area
 
 ## How It Works
 

@@ -16,8 +16,8 @@ def getCoverage(request):
         {
             "Orange": {"2G": true, "3G": true, "4G": false},
             "SFR": {"2G": true, "3G": true, "4G": true},
-            "Free": null,
-            "Bouygues": null
+            "Free": {"2G": false, "3G": true, "4G": true},
+            "Bouygues": {"2G": true, "3G": false, "4G": true},
         }
     
     Raises:
