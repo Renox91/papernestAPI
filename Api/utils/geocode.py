@@ -22,15 +22,13 @@ def check_providers_availability(lon,lat,citycode):
     for operator_code, antenna_data in antennas.items():
         citycode_data = get_city_code_from_coords(antenna_data['coordinates']['lon'], antenna_data['coordinates']['lat'])
         if citycode == citycode_data:
-            print(citycode, citycode_data)
             filtered_antennas[operator_code] = antenna_data
     
     return filtered_antennas
 
-def get_geocode(address):
+def get_coverage(address):
     response = requests.get(API_URL, params={'q': address,"limit": 1})
     citycode = response.json()['features'][0]['properties']['citycode']
-    print(citycode)
     
     # Get filtered antennas
     filtered_antennas = check_providers_availability(

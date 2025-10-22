@@ -1,15 +1,39 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .utils.geocode import get_geocode
+from .utils.geocode import get_coverage
 
 @api_view(['GET'])
-def getData(request):
-    operators = { 'name': 'orange', '2G': True, '3G': True, '4G': False }
-    return Response(operators)
-
-@api_view(['GET'])
-def getGeocode(request):
-    address = request.query_params.get('q')
-    if not address:
-        return Response({'error': 'Address parameter required'}, status=400)
-    return Response(get_geocode(address))
+def getCoverage(request):
+    """
+    Get mobile network coverage for a given address.
+    
+    Args:
+        request: Django request object with 'q' parameter (address)
+    
+    Returns:
+        Response: JSON with operator coverage information
+        {
+            "Orange": {"2G": true, "3G": true, "4G": false},
+            "SFR": {"2G": true, "3G": true, "4G": true},
+            "Free": null,
+            "Bouygues": null
+        }
+    
+    Raises:
+        400: Missing address parameter
+        503: External service unavailable
+        500: Internal server error
+    """
+    try:
+        address = request.query_params.get('q')
+        if not address:
+            return Response({'error': 'Address parameter (q=<address>) required'}, status=400)
+        
+        result = get_coverage(address)
+        return Response(result)
+    
+    except request.RequestException as e:
+        return Response({'error': 'Geocoding service unavailable'}, status=503)
+    
+    except Exception as e:
+        return Response({'error': 'Internal server error'}, status=500)
